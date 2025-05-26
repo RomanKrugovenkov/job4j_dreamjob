@@ -16,12 +16,12 @@ public class MemoryVacancyRepository implements VacancyRepository {
     private final Map<Integer, Vacancy> vacancies = new ConcurrentHashMap<>();
 
     private MemoryVacancyRepository() {
-        save(new Vacancy(0, "Intern Java Developer", "must have starter skills", LocalDateTime.now(), false));
-        save(new Vacancy(0, "Junior Java Developer", "must have elementary skills", LocalDateTime.now(), true));
-        save(new Vacancy(0, "Junior+ Java Developer", "must have intermediate skills", LocalDateTime.now(), false));
-        save(new Vacancy(0, "Middle Java Developer", "must have upper intermediate skills", LocalDateTime.now(), true));
-        save(new Vacancy(0, "Middle+ Java Developer", "must have advanced skills", LocalDateTime.now(), false));
-        save(new Vacancy(0, "Senior Java Developer", "must have proficiency skills", LocalDateTime.now(), false));
+        save(new Vacancy(0, "Intern Java Developer", "must have starter skills", LocalDateTime.now(), false,1));
+        save(new Vacancy(0, "Junior Java Developer", "must have elementary skills", LocalDateTime.now(), true, 2));
+        save(new Vacancy(0, "Junior+ Java Developer", "must have intermediate skills", LocalDateTime.now(), false, 3));
+        save(new Vacancy(0, "Middle Java Developer", "must have upper intermediate skills", LocalDateTime.now(), true, 1));
+        save(new Vacancy(0, "Middle+ Java Developer", "must have advanced skills", LocalDateTime.now(), false, 2));
+        save(new Vacancy(0, "Senior Java Developer", "must have proficiency skills", LocalDateTime.now(), false, 3));
     }
 
     @Override
@@ -44,7 +44,8 @@ public class MemoryVacancyRepository implements VacancyRepository {
                         vacancy.getTitle(),
                         vacancy.getDescription(),
                         vacancy.getCreationDate(),
-                        vacancy.getVisible()))
+                        vacancy.getVisible(),
+                        vacancy.getCityId()))
                 != null;
     }
 
