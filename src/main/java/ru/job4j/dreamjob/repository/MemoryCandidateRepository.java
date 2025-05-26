@@ -16,12 +16,12 @@ public class MemoryCandidateRepository implements CandidateRepository {
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
 
     private MemoryCandidateRepository() {
-        save(new Candidate(0, "Roman", "Intern Java Developer", LocalDateTime.now()));
-        save(new Candidate(0, "Sergey", "Junior Java Developer", LocalDateTime.now()));
-        save(new Candidate(0, "Petr", "Junior+ Java Developer", LocalDateTime.now()));
-        save(new Candidate(0, "Ivan", "Middle Java Developer", LocalDateTime.now()));
-        save(new Candidate(0, "Olga", "Middle+ Java Developer", LocalDateTime.now()));
-        save(new Candidate(0, "Daria", "Senior Java Developer", LocalDateTime.now()));
+        save(new Candidate(0, "Roman", "Intern Java Developer", LocalDateTime.now(), 1));
+        save(new Candidate(0, "Sergey", "Junior Java Developer", LocalDateTime.now(), 2));
+        save(new Candidate(0, "Petr", "Junior+ Java Developer", LocalDateTime.now(), 3));
+        save(new Candidate(0, "Ivan", "Middle Java Developer", LocalDateTime.now(), 1));
+        save(new Candidate(0, "Olga", "Middle+ Java Developer", LocalDateTime.now(), 2));
+        save(new Candidate(0, "Daria", "Senior Java Developer", LocalDateTime.now(), 3));
     }
 
     @Override
@@ -43,7 +43,8 @@ public class MemoryCandidateRepository implements CandidateRepository {
                         oldCandidate.getId(),
                         candidate.getName(),
                         candidate.getDescription(),
-                        candidate.getCreationDate()))
+                        candidate.getCreationDate(),
+                        candidate.getCityId()))
                 != null;
     }
 
