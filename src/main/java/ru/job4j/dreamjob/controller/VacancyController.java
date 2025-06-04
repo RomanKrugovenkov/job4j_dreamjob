@@ -8,6 +8,8 @@ import ru.job4j.dreamjob.dto.FileDto;
 import ru.job4j.dreamjob.model.Vacancy;
 import ru.job4j.dreamjob.service.*;
 
+import java.io.IOException;
+
 @Controller
 @RequestMapping("/vacancies") /* Работать с кандидатами будем по URI /vacancies/** */
 public class VacancyController {
@@ -31,7 +33,6 @@ public class VacancyController {
         return "vacancies/create";
     }
 
-
 /*    @PostMapping("/create")
     public String create(HttpServletRequest request) {
         var title = request.getParameter("title");
@@ -46,6 +47,11 @@ public class VacancyController {
             vacancyService.save(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
             return "redirect:/vacancies";
         } catch (Exception exception) {
+            Throwable cause = exception.getCause();
+            if (cause instanceof IOException) {
+                model.addAttribute("message", exception.getStackTrace());
+                return "errors/500";
+            }
             model.addAttribute("message", exception.getMessage());
             return "errors/404";
         }
@@ -65,12 +71,12 @@ public class VacancyController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute Vacancy vacancy, @RequestParam MultipartFile file, Model model) {
+        if (vacancyService.findById(vacancy.getId()).isEmpty()) {
+            model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
+            return "errors/404";
+        }
         try {
-            var isUpdated = vacancyService.update(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
-            if (!isUpdated) {
-                model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
-                return "errors/404";
-            }
+            vacancyService.update(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
             return "redirect:/vacancies";
         } catch (Exception exception) {
             model.addAttribute("message", exception.getMessage());
