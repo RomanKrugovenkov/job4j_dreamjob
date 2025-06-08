@@ -10,18 +10,18 @@ import java.util.Optional;
 
 @Service
 public class SimpleCandidateService implements CandidateService {
-    private final CandidateRepository candidateRepository;
+    private final CandidateRepository sql2oCandidateRepository;
     private final FileService fileService;
 
-    private SimpleCandidateService(CandidateRepository candidateRepository, FileService fileService) {
-        this.candidateRepository = candidateRepository;
+    private SimpleCandidateService(CandidateRepository sql2oCandidateRepository, FileService fileService) {
+        this.sql2oCandidateRepository = sql2oCandidateRepository;
         this.fileService = fileService;
     }
 
     @Override
     public Candidate save(Candidate candidate, FileDto image) {
         saveNewFile(candidate, image);
-        return candidateRepository.save(candidate);
+        return sql2oCandidateRepository.save(candidate);
     }
 
     private void saveNewFile(Candidate candidate, FileDto image) {
@@ -35,30 +35,30 @@ public class SimpleCandidateService implements CandidateService {
         if (fileOptional.isPresent()) {
             fileService.deleteById(fileOptional.get().getFileId());
         }
-        return candidateRepository.deleteById(id);
+        return sql2oCandidateRepository.deleteById(id);
     }
 
     @Override
     public boolean update(Candidate candidate, FileDto image) {
         var isNewFileEmpty = image.getContent().length == 0;
         if (isNewFileEmpty) {
-            return candidateRepository.update(candidate);
+            return sql2oCandidateRepository.update(candidate);
         }
         /* если передан новый не пустой файл, то старый удаляем, а новый сохраняем */
         var oldFileId = candidate.getFileId();
         saveNewFile(candidate, image);
-        var isUpdated = candidateRepository.update(candidate);
+        var isUpdated = sql2oCandidateRepository.update(candidate);
         fileService.deleteById(oldFileId);
         return isUpdated;
     }
 
     @Override
     public Optional<Candidate> findById(int id) {
-        return candidateRepository.findById(id);
+        return sql2oCandidateRepository.findById(id);
     }
 
     @Override
     public Collection<Candidate> findAll() {
-        return candidateRepository.findAll();
+        return sql2oCandidateRepository.findAll();
     }
 }
