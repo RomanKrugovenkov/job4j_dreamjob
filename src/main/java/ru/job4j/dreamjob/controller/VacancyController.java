@@ -9,6 +9,7 @@ import ru.job4j.dreamjob.model.Vacancy;
 import ru.job4j.dreamjob.service.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Controller
 @RequestMapping("/vacancies") /* Работать с кандидатами будем по URI /vacancies/** */
@@ -49,7 +50,7 @@ public class VacancyController {
         } catch (Exception exception) {
             Throwable cause = exception.getCause();
             if (cause instanceof IOException) {
-                model.addAttribute("message", exception.getStackTrace());
+                model.addAttribute("message", Arrays.toString(exception.getStackTrace()));
                 return "errors/500";
             }
             model.addAttribute("message", exception.getMessage());
