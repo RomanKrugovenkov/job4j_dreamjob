@@ -37,12 +37,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
@@ -71,7 +65,75 @@
             <artifactId>sql2o</artifactId>
             <version>1.6.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.1.214</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>javax.activation-api</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-maven-plugin</artifactId>
+            <version>4.15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>4.15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.27</version>
+        </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <properties>
+                <liquibase.config>db/liquibase_test.properties</liquibase.config>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <liquibase.config>db/liquibase.properties</liquibase.config>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -103,6 +165,23 @@
                         </configuration>
                         <goals>
                             <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>4.15.0</version>
+                <configuration>
+                    <propertyFile>${liquibase.config}</propertyFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>clearCheckSums</goal>
+                            <goal>update</goal>
                         </goals>
                     </execution>
                 </executions>
